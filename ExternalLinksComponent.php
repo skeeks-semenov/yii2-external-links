@@ -64,19 +64,19 @@ class ExternalLinksComponent extends Component implements BootstrapInterface
      * Additional logic to disable AutoCorrect. For example, if running the admin part, or is there the option not to include the AutoCorrect
      *
      *  function(ExternalLinksComponent $component)
-        {
-            if (\Yii::$app->request->get('test'))
-            {
-                $component->enabled = false;
-            }
-
-            if (\Yii::$app->cms->moduleAdmin->requestIsAdmin())
-            {
-                $component->enabled = false;
-            }
-
-            $component->noReplaceLinksOnDomains[] = 'test.ru';
-        }
+     *  {
+     *     if (\Yii::$app->request->get('test'))
+     *      {
+     *          $component->enabled = false;
+     *      }
+     *   
+     *      if (\Yii::$app->cms->moduleAdmin->requestIsAdmin())
+     *      {
+     *          $component->enabled = false;
+     *      }
+     *
+     *   $component->noReplaceLinksOnDomains[] = 'test.ru';
+     *  }
      * @var callable
      */
     public $callback = null;
