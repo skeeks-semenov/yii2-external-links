@@ -46,7 +46,7 @@ class ExternalLinksComponent extends Component implements BootstrapInterface
      * The base of the new url
      * @var string
      */
-    public $backendRoute = '/external-links/redirect';
+    public $backendRoute = '/externallinks/redirect/redirect';
 
     /**
      * @var string
@@ -63,23 +63,23 @@ class ExternalLinksComponent extends Component implements BootstrapInterface
      *
      * Additional logic to disable AutoCorrect. For example, if running the admin part, or is there the option not to include the AutoCorrect
      *
-     *  function()
+     *  function(ExternalLinksComponent $component)
         {
-            if (!\Yii::$app->request->get('dev'))
+            if (\Yii::$app->request->get('test'))
             {
-                return false;
+                $component->enabled = false;
             }
 
             if (\Yii::$app->cms->moduleAdmin->requestIsAdmin())
             {
-                return false;
+                $component->enabled = false;
             }
 
-            return true;
+            $component->noReplaceLinksOnDomains[] = 'test.ru';
         }
      * @var callable
      */
-    public $enabledCallback = null;
+    public $callback = null;
 
 
 
@@ -92,18 +92,15 @@ class ExternalLinksComponent extends Component implements BootstrapInterface
         {
             $app->view->on(View::EVENT_END_PAGE, function(Event $e)
             {
+                $callback = $this->callback;
+                if ($callback && is_callable($callback))
+                {
+                    $callback($this);
+                }
+
                 if ($this->enabled === false)
                 {
                     return false;
-                }
-
-                $callback = $this->enabledCallback;
-                if ($callback && is_callable($callback))
-                {
-                    if ((bool) $callback() ===false )
-                    {
-                        return false;
-                    }
                 }
 
                 /**
