@@ -22,18 +22,50 @@ or add
 How to use
 ----------
 
+
 ```php
 //App config
 [
-    'bootstrap'    => ['assetsAutoCompress'],
+    'bootstrap'    => ['externalLinks'],
+
     'components'    =>
     [
-    //....
-        'assetsAutoCompress' =>
+        //....
+        'externalLinks' =>
         [
-            'class'         => '\skeeks\yii2\assetsAuto\AssetsAutoCompressComponent',
+            'class' => 'skeeks\yii2\externalLinks\ExternalLinksComponent',
+
+            //Additional
+            'enabled'                           => true,
+            'noReplaceLocalDomain'              => true,
+            'backendRoute'                      => '/externallinks/redirect/redirect',
+            'backendRouteParam'                 => 'url',
+            'enabledB64Encode'                  => true,
+            'noReplaceLinksOnDomains'           => [
+                'site1.ru',
+                'www.site1.ru',
+                'site2.ru',
+            ],
+            'callback' => function(skeeks\yii2\externalLinks\ExternalLinksComponent $component)
+            {
+                if (\Yii::$app->request->get('test'))
+                {
+                    $component->enabled = false;
+                }
+                $component->noReplaceLinksOnDomains[] = 'test.ru';
+            }
         ],
-    //....
+        //....
+    ],
+
+    'modules'    =>
+    [
+        //....
+        'externallinks' =>
+        [
+            'class' => 'skeeks\yii2\externalLinks\ExternalLinksModule',
+        ],
+        //....
     ]
 ]
 
@@ -41,29 +73,8 @@ How to use
 
 
 
-```php
-//App config
-[
-    'bootstrap'    => ['assetsAutoCompress'],
-    'components'    =>
-    [
-    //....
-        'assetsAutoCompress' =>
-        [
-            'class'             => '\skeeks\yii2\assetsAuto\AssetsAutoCompressComponent',
-            'enabled'           => true,
-            'jsCompress'        => true,
-            'cssFileCompile'    => true,
-            'jsFileCompile'     => true,
-        ],
-    //....
-    ]
-]
-
-```
+> [![skeeks!](https://gravatar.com/userimage/74431132/13d04d83218593564422770b616e5622.jpg)](http://skeeks.com)
+<i>SkeekS CMS (Yii2) Ч быстро, просто, эффективно!</i>
+[skeeks.com](http://skeeks.com) | [cms.skeeks.com](http://cms.skeeks.com) | [marketplace.cms.skeeks.com](http://marketplace.cms.skeeks.com)
 
 
-
-> [![skeeks!](https://gravatar.com/userimage/74431132/13d04d83218593564422770b616e5622.jpg)](http://www.skeeks.com)  
-<i>Web development has never been so fun!</i>  
-[www.skeeks.com](http://www.skeeks.com)
