@@ -46,14 +46,6 @@ How to use
                 'www.site1.ru',
                 'site2.ru',
             ],
-            'callback' => function(skeeks\yii2\externalLinks\ExternalLinksComponent $component)
-            {
-                if (\Yii::$app->request->get('test'))
-                {
-                    $component->enabled = false;
-                }
-                $component->noReplaceLinksOnDomains[] = 'test.ru';
-            }
         ],
         //....
     ],
