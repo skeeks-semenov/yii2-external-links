@@ -19,7 +19,39 @@ or add
 ```
 
 
-How to use
+How to use (simple)
+----------
+
+
+```php
+//App config
+[
+    'bootstrap'    => ['externalLinks'],
+
+    'components'    =>
+    [
+        //....
+        'externalLinks' =>
+        [
+            'class' => 'skeeks\yii2\externalLinks\ExternalLinksComponent',
+        ],
+        //....
+    ],
+
+    'modules'    =>
+    [
+        //....
+        'externallinks' =>
+        [
+            'class' => 'skeeks\yii2\externalLinks\ExternalLinksModule',
+        ],
+        //....
+    ]
+]
+
+```
+
+How to use (advanced)
 ----------
 
 
@@ -47,6 +79,16 @@ How to use
                 'site2.ru',
             ],
         ],
+        
+        'urlManager' => 
+        [
+            'rules' => 
+            [
+                //Rewriting the standard route
+                //And add robots.txt  Disallow: /~*
+                '~skeeks-redirect'                        => '/externallinks/redirect/redirect',
+            ]
+        ]
         //....
     ],
 
