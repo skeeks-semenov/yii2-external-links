@@ -1,0 +1,27 @@
+{
+	"name": "skeeks/yii2-external-links",
+	"description": "AutoCorrect external links after rendering html page",
+	"keywords": ["yii", "app", "skeeks", "sx", "framework", "auto correct"],
+    "homepage": "http://skeeks.com/",
+	"type": "yii2-extension",
+	"license": "GPL-3.0+",
+	"support": {
+        "issues": "http://skeeks.com/",
+        "wiki": "http://skeeks.com/",
+        "source": "https://github.com/skeeks-semenov/yii2-external-links"
+    },
+	"authors": [
+		{
+			"name": "Semenov Alexander",
+			"email": "semenov@skeeks.com"
+		}
+	],
+	"require": {
+		"yiisoft/yii2": "*"
+	},
+    "autoload": {
+        "psr-4": {
+            "skeeks\\yii2\\externalLinks\\": ""
+        }
+    }
+}
