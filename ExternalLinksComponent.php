@@ -107,7 +107,7 @@ class ExternalLinksComponent extends Component implements BootstrapInterface
                  * @var $view View
                  */
                 $view = $e->sender;
-                if ($this->enabled && $view instanceof View && \Yii::$app->response->format == Response::FORMAT_HTML && !\Yii::$app->request->isAjax && !\Yii::$app->request->isPjax)
+                if ($this->enabled && $view instanceof View && \Yii::$app->response->format == Response::FORMAT_HTML && !\Yii::$app->request->isAjax && !\Yii::$app->request->isPjax && \Yii::$app->response->statusCode == 200)
                 {
                     \Yii::beginProfile('ExternalLinks');
 
