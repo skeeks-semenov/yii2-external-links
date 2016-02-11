@@ -23,6 +23,8 @@ use yii\web\View;
  */
 class ExternalLinksComponent extends Component implements BootstrapInterface
 {
+    const EVENT_BEFORE_PROCESSING = 'beforeProcessing';
+
     /**
      * @var bool
      */
@@ -58,31 +60,6 @@ class ExternalLinksComponent extends Component implements BootstrapInterface
      */
     public $enabledB64Encode = true;
 
-
-    /**
-     *
-     * Additional logic to disable AutoCorrect. For example, if running the admin part, or is there the option not to include the AutoCorrect
-     *
-     *  function(ExternalLinksComponent $component)
-     *  {
-     *     if (\Yii::$app->request->get('test'))
-     *      {
-     *          $component->enabled = false;
-     *      }
-     *   
-     *      if (\Yii::$app->cms->moduleAdmin->requestIsAdmin())
-     *      {
-     *          $component->enabled = false;
-     *      }
-     *
-     *   $component->noReplaceLinksOnDomains[] = 'test.ru';
-     *  }
-     * @var callable
-     */
-    public $callback = null;
-
-
-
     /**
      * @param \yii\web\Application $app
      */
@@ -90,32 +67,18 @@ class ExternalLinksComponent extends Component implements BootstrapInterface
     {
         if ($app instanceof Application)
         {
-            if ($app->response->format != Response::FORMAT_HTML || !$app->response instanceof Response)
+            $app->response->on(Response::EVENT_AFTER_PREPARE, function(Event $e) use ($app)
             {
-                return false;
-            }
-
-            $app->response->on(Response::EVENT_AFTER_PREPARE, function(Event $e)
-            {
-                $callback = $this->callback;
-                if ($callback && is_callable($callback))
-                {
-                    $callback($this);
-                }
-
-                if ($this->enabled === false)
-                {
-                    return false;
-                }
-
                 /**
                  * @var $response Response
                  */
                 $response = $e->sender;
-                if ($this->enabled && !\Yii::$app->request->isAjax && !\Yii::$app->request->isPjax)
+
+                $this->trigger(self::EVENT_BEFORE_PROCESSING);
+
+                if ($this->enabled && !$app->request->isAjax && !$app->request->isPjax && $app->response->format == Response::FORMAT_HTML)
                 {
                     \Yii::beginProfile('ExternalLinks');
-
 
                     $content = $response->content;
                     $this->initReplaceLinks();
@@ -162,12 +125,12 @@ class ExternalLinksComponent extends Component implements BootstrapInterface
                     }
 
                     $response->content = $content;
+
                     \Yii::endProfile('ExternalLinks');
                 }
             });
         }
     }
-
 
     /**
      * @return $this

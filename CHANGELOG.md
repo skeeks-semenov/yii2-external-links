@@ -1,8 +1,10 @@
 CHANGELOG
 ==============
 
-1.0.2
+1.1.0
 -----------------
+  * remove callback property
+  * EVENT_BEFORE_PROCESSING before process replace
   * fix bug whith redirects
 
 1.0.1
