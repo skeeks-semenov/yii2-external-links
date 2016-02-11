@@ -90,7 +90,12 @@ class ExternalLinksComponent extends Component implements BootstrapInterface
     {
         if ($app instanceof Application)
         {
-            $app->view->on(View::EVENT_END_PAGE, function(Event $e)
+            if ($app->response->format != Response::FORMAT_HTML || !$app->response instanceof Response)
+            {
+                return false;
+            }
+
+            $app->response->on(Response::EVENT_AFTER_PREPARE, function(Event $e)
             {
                 $callback = $this->callback;
                 if ($callback && is_callable($callback))
@@ -104,14 +109,15 @@ class ExternalLinksComponent extends Component implements BootstrapInterface
                 }
 
                 /**
-                 * @var $view View
+                 * @var $response Response
                  */
-                $view = $e->sender;
-                if ($this->enabled && $view instanceof View && \Yii::$app->response->format == Response::FORMAT_HTML && !\Yii::$app->request->isAjax && !\Yii::$app->request->isPjax && \Yii::$app->response->statusCode == 200)
+                $response = $e->sender;
+                if ($this->enabled && !\Yii::$app->request->isAjax && !\Yii::$app->request->isPjax)
                 {
                     \Yii::beginProfile('ExternalLinks');
 
-                    $content = ob_get_clean();
+
+                    $content = $response->content;
                     $this->initReplaceLinks();
 
                     $matches = [];
@@ -155,11 +161,7 @@ class ExternalLinksComponent extends Component implements BootstrapInterface
                         }
                     }
 
-                    /*$pattern = '#(<a[a-z\-_\s\"\#\=]*)(href=")((https?|ftp)://)#i';
-                    $replace = '$1 target="_blank" $2/~trust-redirect?url=$3';
-                    $content = preg_replace($pattern, $replace, $content);*/
-
-                    echo $content;
+                    $response->content = $content;
                     \Yii::endProfile('ExternalLinks');
                 }
             });
