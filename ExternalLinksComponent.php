@@ -114,11 +114,21 @@ class ExternalLinksComponent extends Component implements BootstrapInterface
 
                                 $newUrl = Url::to([$this->backendRoute, $this->backendRouteParam => $linkForUrl]);
 
+                                //replacing references only after <body
+                                $bodyPosition   = strpos($content, '<body');
+                                $headerContent  = substr($content, 0, $bodyPosition);
+                                $bodyContent    = substr($content, $bodyPosition, strlen($content));
+
+                                $resultContent = '';
+
                                 $replaceUrl = 'href="' . $newUrl . '"';
-                                $content = str_replace('href="' . $link . '"', $replaceUrl, $content);
+                                $bodyContent = str_replace('href="' . $link . '"', $replaceUrl, $bodyContent);
 
                                 $replaceUrl = 'href=\'' . $newUrl . '\'';
-                                $content = str_replace('href=\'' . $link . '\'', $replaceUrl, $content);
+                                $bodyContent = str_replace('href=\'' . $link . '\'', $replaceUrl, $bodyContent);
+
+                                $resultContent = $headerContent . $bodyContent;
+                                $content = $resultContent;
                             }
 
                         }

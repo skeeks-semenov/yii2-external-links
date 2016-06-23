@@ -1,6 +1,10 @@
 CHANGELOG
 ==============
 
+1.1.1
+-----------------
+  * replacing references only after <body
+
 1.1.0
 -----------------
   * remove callback property
