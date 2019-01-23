@@ -1,13 +1,14 @@
 AutoCorrect external links after rendering html page
 ===================================
 
+[![Latest Stable Version](https://img.shields.io/packagist/v/skeeks/yii2-external-links.svg)](https://packagist.org/packages/skeeks/yii2-external-links)
+[![Total Downloads](https://img.shields.io/packagist/dt/skeeks/yii2-external-links.svg)](https://packagist.org/packages/skeeks/yii2-external-links)
+
 Installation
 ------------
 
 The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
 
-[![Latest Stable Version](https://img.shields.io/packagist/v/skeeks/yii2-external-links.svg)](https://packagist.org/packages/skeeks/yii2-external-links)
-[![Total Downloads](https://img.shields.io/packagist/dt/skeeks/yii2-external-links.svg)](https://packagist.org/packages/skeeks/yii2-external-links)
 
 Either run
 
