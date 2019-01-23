@@ -6,6 +6,9 @@ Installation
 
 The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
 
+[![Latest Stable Version](https://img.shields.io/packagist/v/skeeks/yii2-external-links.svg)](https://packagist.org/packages/skeeks/yii2-external-links)
+[![Total Downloads](https://img.shields.io/packagist/dt/skeeks/yii2-external-links.svg)](https://packagist.org/packages/skeeks/yii2-external-links)
+
 Either run
 
 ```
@@ -108,12 +111,12 @@ How to use (advanced)
 ##Screenshot
 [![SkeekS CMS admin panel](http://marketplace.cms.skeeks.com/uploads/all/b3/c5/f6/b3c5f64a07798c80f78c0de102a4cf14.png)](http://marketplace.cms.skeeks.com/uploads/all/b3/c5/f6/b3c5f64a07798c80f78c0de102a4cf14.png)
 
+
 ___
 
-
-> [![skeeks!](https://gravatar.com/userimage/74431132/13d04d83218593564422770b616e5622.jpg)](http://skeeks.com)  
-<i>SkeekS CMS (Yii2) — fast, simple, effective!</i>  
-[skeeks.com](http://skeeks.com) | [cms.skeeks.com](http://cms.skeeks.com) | [marketplace.cms.skeeks.com](http://marketplace.cms.skeeks.com)
+> [![skeeks!](https://skeeks.com/img/logo/logo-no-title-80px.png)](https://skeeks.com)  
+<i>SkeekS CMS (Yii2) — quickly, easily and effectively!</i>  
+[skeeks.com](https://skeeks.com) | [cms.skeeks.com](https://cms.skeeks.com)
 
 
 
