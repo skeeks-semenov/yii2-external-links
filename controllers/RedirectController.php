@@ -27,7 +27,12 @@ class RedirectController extends Controller
                 $url = base64_decode($url);
             }
 
-            return $this->redirect($url);
+            \Yii::info("redirrect to: " . $url, self::class);
+
+            return $this->render($this->action->id, [
+                'url' => $url
+            ]);
+            //return $this->redirect($url);
         }
 
         throw new BadRequestHttpException;
