@@ -84,7 +84,7 @@ class ExternalLinksComponent extends Component implements BootstrapInterface
                     $this->initReplaceLinks();
 
                     $matches = [];
-                    if (preg_match_all("/<[Aa][\s]{1}[^>]*[Hh][Rr][Ee][Ff][^=]*=[ '\"\s]*([^ \"'>\s#]+)[^>]*>/", $content, $matches))
+                    if (preg_match_all("/<[Aa][\s]{1}[^>]*[Hh][Rr][Ee][Ff][^=]*=[ '\"\s]*([^ \"'>\s#]+)[^>]*>/", (string) $content, $matches))
                     {
                         if (isset($matches[1]))
                         {
