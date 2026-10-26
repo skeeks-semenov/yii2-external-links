@@ -7,10 +7,16 @@
  */
 
 namespace skeeks\yii2\externalLinks\controllers;
+use skeeks\yii2\externalLinks\ExternalLinksComponent;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 
 /**
+ * Transition page to an external link.
+ *
+ * Only absolute http(s) links are accepted. A link signed by this site (see ExternalLinksComponent::createRedirectUrl())
+ * is opened automatically; an unsigned link (old caches, search engines or a foreign substitution) is shown with a button only.
+ *
  * Class RedirectController
  * @package skeeks\yii2\externalLinks\controllers
  */
@@ -20,21 +26,35 @@ class RedirectController extends Controller
 
     public function actionRedirect()
     {
-        if ($url = \Yii::$app->request->get(\Yii::$app->externalLinks->backendRouteParam))
-        {
-            if (\Yii::$app->externalLinks->enabledB64Encode)
-            {
-                $url = base64_decode($url);
-            }
+        /**
+         * @var $component ExternalLinksComponent
+         */
+        $component = \Yii::$app->externalLinks;
+        $request = \Yii::$app->request;
 
-            \Yii::info("redirrect to: " . $url, self::class);
+        \Yii::$app->response->headers->set('X-Robots-Tag', 'noindex, nofollow');
+        $this->view->registerMetaTag(['name' => 'robots', 'content' => 'noindex, nofollow'], 'robots');
 
-            return $this->render($this->action->id, [
-                'url' => $url
-            ]);
-            //return $this->redirect($url);
+        $url = $request->get($component->backendRouteParam);
+        if (!is_string($url) || $url === '') {
+            throw new BadRequestHttpException;
         }
 
-        throw new BadRequestHttpException;
+        if ($component->enabledB64Encode) {
+            $url = base64_decode($url, true);
+        }
+
+        if (!$component->isAllowedUrl($url)) {
+            throw new BadRequestHttpException;
+        }
+
+        $isSigned = $component->validateSign($url, $request->get($component->signParam));
+
+        \Yii::info("redirrect to: " . $url . ($isSigned ? "" : " (unsigned)"), self::class);
+
+        return $this->render($this->action->id, [
+            'url'      => $url,
+            'isSigned' => $isSigned,
+        ]);
     }
 }

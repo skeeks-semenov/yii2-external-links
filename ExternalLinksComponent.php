@@ -61,6 +61,21 @@ class ExternalLinksComponent extends Component implements BootstrapInterface
     public $enabledB64Encode = true;
 
     /**
+     * @var string Name of the GET parameter with the link signature
+     */
+    public $signParam = 'sign';
+
+    /**
+     * @var string|null Secret for link signatures; request cookieValidationKey by default
+     */
+    public $signKey;
+
+    /**
+     * @var string[] Only these schemes are accepted by the redirect page
+     */
+    public $allowedSchemes = ['http', 'https'];
+
+    /**
      * @param \yii\web\Application $app
      */
     public function bootstrap($app)
@@ -106,13 +121,12 @@ class ExternalLinksComponent extends Component implements BootstrapInterface
                                     }
                                 }
 
-                                $linkForUrl = $link;
-                                if ($this->enabledB64Encode)
+                                if (!$this->isAllowedUrl(Html::decode($link)))
                                 {
-                                    $linkForUrl = base64_encode($link);
+                                    continue;
                                 }
 
-                                $newUrl = Url::to([$this->backendRoute, $this->backendRouteParam => $linkForUrl]);
+                                $newUrl = Html::encode($this->createRedirectUrl(Html::decode($link)));
 
                                 //replacing references only after <body
                                 $bodyPosition   = strpos($content, '<body');
@@ -140,6 +154,63 @@ class ExternalLinksComponent extends Component implements BootstrapInterface
                 }
             });
         }
+    }
+
+    /**
+     * Redirect page url for an external link, signed by this site
+     *
+     * @param string $url
+     * @return string
+     */
+    public function createRedirectUrl($url)
+    {
+        return Url::to([
+            $this->backendRoute,
+            $this->backendRouteParam => $this->enabledB64Encode ? base64_encode($url) : $url,
+            $this->signParam         => $this->sign($url),
+        ]);
+    }
+
+    /**
+     * @param string $url
+     * @return string
+     */
+    public function sign($url)
+    {
+        $key = $this->signKey ?: (string) \Yii::$app->request->cookieValidationKey;
+        return substr(hash_hmac('sha256', 'externalLinks|' . $url, $key), 0, 32);
+    }
+
+    /**
+     * @param string $url
+     * @param string|null $sign
+     * @return bool
+     */
+    public function validateSign($url, $sign)
+    {
+        return is_string($sign) && $sign !== '' && hash_equals($this->sign($url), $sign);
+    }
+
+    /**
+     * Only absolute links with an allowed scheme and a host may be opened by the redirect page
+     *
+     * @param string $url
+     * @return bool
+     */
+    public function isAllowedUrl($url)
+    {
+        if (!is_string($url) || $url === '' || strlen($url) > 4096 || preg_match('/[\x00-\x20\x7f\\\\]/', $url))
+        {
+            return false;
+        }
+
+        $data = parse_url($url);
+        if (!$data || empty($data['host']) || empty($data['scheme']))
+        {
+            return false;
+        }
+
+        return in_array(strtolower($data['scheme']), $this->allowedSchemes, true);
     }
 
     /**

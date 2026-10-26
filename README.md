@@ -89,7 +89,6 @@ How to use (advanced)
             'rules' => 
             [
                 //Rewriting the standard route
-                //And add robots.txt  Disallow: /~*
                 '~skeeks-redirect'                        => '/externallinks/redirect/redirect',
             ]
         ]
@@ -108,6 +107,17 @@ How to use (advanced)
 ]
 
 ```
+
+Redirect page security
+----------
+
+* Only absolute links with a scheme from `allowedSchemes` (`http`, `https` by default) are accepted; anything else gets 400.
+* Links replaced on the page are signed: `createRedirectUrl($url)` adds the `signParam` (`sign`) parameter, an HMAC of the link
+  with `signKey` (the request `cookieValidationKey` by default). Signed links are opened automatically.
+* Unsigned or wrongly signed links (old caches, search engines, links made by somebody else) are not opened automatically:
+  the page shows the target address and a "go" button.
+* The page is sent with `X-Robots-Tag: noindex, nofollow` and the robots meta tag. Do not disallow it in robots.txt,
+  otherwise search engines cannot see noindex.
 
 ##Screenshot
 [![SkeekS CMS admin panel](http://marketplace.cms.skeeks.com/uploads/all/b3/c5/f6/b3c5f64a07798c80f78c0de102a4cf14.png)](http://marketplace.cms.skeeks.com/uploads/all/b3/c5/f6/b3c5f64a07798c80f78c0de102a4cf14.png)
